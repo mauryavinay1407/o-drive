@@ -6,43 +6,47 @@
     <title>Sign In</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body
-    class="bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center min-h-screen p-6"
-  >
-    <form
-      class="w-full max-w-md bg-white rounded-xl shadow-lg p-8 md:p-10 space-y-6"
-      action="/user/login"
-      method="post"
-    >
-      <h2 class="text-2xl font-bold text-gray-700 text-center">Sign In</h2>
+  <body class="bg-[#0b1120]  flex flex-col items-center justify-start min-h-screen">
+
+    <nav class="bg-[#0b1120] backdrop-blur-md shadow-sm sticky top-0 z-10 w-full">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center cursor-pointer">
+          <div class="flex items-center"
+          id="logo"
+          onclick="backToHomePage()"
+          >
+            <svg class="h-8 w-8 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h10a4 4 0 004-4v-4a4 4 0 00-4-4h-2.586l-1.707-1.707A1 1 0 0012.293 5H7a4 4 0 00-4 4v6z" />
+            </svg>
+            <span class="ml-2 text-2xl font-bold text-white">O-Drive</span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+    <form class="w-full max-w-md bg-[#1E293B] text-white rounded-xl shadow-lg p-8 md:p-10 space-y-6 mt-24" id="loginform">
+      <h2 class="text-2xl font-bold text-gray-100 text-center">Sign In</h2>
 
       <div>
-        <label
-          for="email"
-          class="block mb-2 text-sm font-semibold text-gray-600"
-          >Email</label
-        >
+        <label for="email" class="block mb-2 text-sm font-semibold text-gray-300">Email</label>
         <input
           type="email"
           id="email"
           name="email"
-          class="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-3"
+          class="border border-gray-600 text-black text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-3"
           placeholder="john.doe@company.com"
           required
         />
       </div>
 
       <div>
-        <label
-          for="password"
-          class="block mb-2 text-sm font-semibold text-gray-600"
-          >Password</label
-        >
+        <label for="password" class="block mb-2 text-sm font-semibold text-gray-300">Password</label>
         <input
           type="password"
           id="password"
           name="password"
-          class="bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-3"
+          class="border border-gray-600 text-black text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-3"
           placeholder="•••••••••"
           required
         />
@@ -50,25 +54,52 @@
 
       <button
         type="submit"
-        class="w-full py-3 mt-6 text-white font-semibold bg-purple-600 rounded-lg hover:bg-purple-700 focus:ring-4 focus:ring-purple-300 transition duration-200 text-center"
+        class="w-full py-3 mt-6 text-white font-semibold bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition duration-200 text-center"
       >
         Sign In
       </button>
 
-      <p class="text-center text-sm text-gray-600 mt-4">
-        Don't have an account?
-        <a
-          href="#"
-          onclick="navigateToSignUp()"
-          class="text-purple-600 hover:underline hover:text-purple-700 font-medium"
-          >Sign up</a
-        >
+      <p class="text-center text-sm text-gray-300 mt-4">
+        Don't have an account? 
+        <a href="#" onclick="navigateToSignUp()" class="text-blue-600 hover:underline hover:text-purple-700 font-medium">Sign up</a>
       </p>
     </form>
 
     <script>
       function navigateToSignUp() {
         window.location.href = "http://localhost:3000/user/sign-up";
+      }
+
+      document.getElementById('loginform').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+          const response = await fetch("http://localhost:3000/user/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+            credentials: "include"
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            localStorage.setItem('username', result.username);
+            window.location.href = result.redirectUrl;
+          } else {
+            alert(result.message);
+          }
+        } catch (error) {
+          alert("login failed!!!")
+        }
+      });
+
+      function backToHomePage(){
+        document.getElementById('logo').addEventListener('click',()=>{
+          window.location.href = "http://localhost:3000";
+        })
       }
     </script>
   </body>

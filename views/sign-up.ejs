@@ -7,22 +7,51 @@
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body
-    class="bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center min-h-screen p-6"
+    class="bg-[#0b1120] flex flex-col items-center justify-start min-h-screen "
   >
-    <form
-      class="w-full max-w-lg bg-white rounded-xl shadow-lg p-8 md:p-10 space-y-6"
-      action="/user/sign-up"
-      method="post"
-    >
-      <h2 class="text-2xl font-bold text-gray-700 text-center">
-        Create an Account
-      </h2>
 
-      <div class="grid gap-6 mb-6 md:grid-cols-2">
+    <nav
+      class="bg-[#0b1120] backdrop-blur-md shadow-sm sticky top-0 w-full z-10"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+          <div class="flex items-center cursor-pointer"
+          id="logo"
+          onclick="backToHomePage()"
+          >
+             >
+            <svg
+              class="h-8 w-8 text-blue-600"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 15a4 4 0 004 4h10a4 4 0 004-4v-4a4 4 0 00-4-4h-2.586l-1.707-1.707A1 1 0 0012.293 5H7a4 4 0 00-4 4v6z"
+              />
+            </svg>
+            <span class="ml-2 text-2xl font-bold text-white">O-Drive</span>
+          </div>
+         
+        </div>
+      </div>
+    </nav>
+
+
+    <form
+      class="w-full max-w-md bg-[#1E293B] rounded-xl shadow-lg p-8 md:p-10 space-y-6 mt-24"
+      id="signUpform"
+    >
+      <h2 class="text-2xl font-bold text-gray-100 text-center"> Create an Account </h2>
+
+      <div class="grid gap-6 mb-6 md:grid-cols-2 text-gray-300">
         <div>
           <label
             for="username"
-            class="block mb-2 text-sm font-semibold text-gray-600"
+            class="block mb-2 text-sm font-semibold "
             >Username</label
           >
           <input
@@ -38,7 +67,7 @@
         <div>
           <label
             for="email"
-            class="block mb-2 text-sm font-semibold text-gray-600"
+            class="block mb-2 text-sm font-semibold"
             >Email address</label
           >
           <input
@@ -55,7 +84,7 @@
       <div>
         <label
           for="password"
-          class="block mb-2 text-sm font-semibold text-gray-600"
+          class="block mb-2 text-sm font-semibold text-gray-300"
           >Password</label
         >
         <input
@@ -70,19 +99,20 @@
 
       <button
         type="submit"
-        class="w-full py-3 mt-6 text-white font-semibold bg-purple-600 rounded-lg hover:bg-purple-700 focus:ring-4 focus:ring-purple-300 transition duration-200 text-center"
+        class="w-full py-3 mt-6 text-white font-semibold bg-blue-600 rounded-lg hover:bg-purple-700 focus:ring-4 focus:ring-purple-300 transition duration-200 text-center"
       >
         Submit
       </button>
 
-      <p class="text-center text-sm text-gray-600 mt-4">
+      <p class="text-center text-sm text-gray-300 mt-4">
         Already have an account?
         <a
           href="#"
           onclick="navigateToSignIn()"
-          class="text-purple-600 hover:underline hover:text-purple-700 font-medium"
-          >Sign in</a
+          class="text-blue-600 hover:underline hover:text-purple-700 font-medium"
         >
+          Sign in
+        </a>
       </p>
     </form>
 
@@ -90,6 +120,38 @@
       function navigateToSignIn() {
         window.location.href = "http://localhost:3000/user/login";
       }
+      function backToHomePage(){
+        document.getElementById('logo').addEventListener('click',()=>{
+          window.location.href = "http://localhost:3000";
+        })
+      }
+
+      document.getElementById('signUpform').addEventListener('submit',async(e)=>{
+          e.preventDefault();
+
+          const username = document.getElementById('username').value;
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
+          try {
+            const response = await fetch('http://localhost:3000/user/sign-up',{
+              method:"POST",
+              headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username,email, password }),
+            credentials: "include"
+            });
+
+            const result = await response.json();
+          if (response.ok) {
+            localStorage.setItem('username', result.username);
+            window.location.href = result.redirectUrl;
+          } else {
+            alert(result.message);
+          }
+          } catch (error) {
+            
+          }
+      })
+
     </script>
   </body>
 </html>

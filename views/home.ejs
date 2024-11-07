@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>O-Drive - File Upload</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .upload-progress {
+        transition: width 0.3s ease-in-out;
+      }
+
+      .drag-over {
+        transform: scale(1.02);
+        transition: all 0.2s ease-in-out;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .uploading {
+        animation: pulse 1.5s infinite;
+      }
+    </style>
+  </head>
+  <body class="bg-[#0b1120] min-h-screen">
+
+    <nav class="bg-[#0b1120] shadow-sm sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex flex-wrap justify-between items-center h-16">
+ 
+            <div class="flex items-center">
+              <svg class="h-8 w-8 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h10a4 4 0 004-4v-4a4 4 0 00-4-4h-2.586l-1.707-1.707A1 1 0 0012.293 5H7a4 4 0 00-4 4v6z" />
+              </svg>
+              <span class="ml-2 text-2xl font-bold text-white">O-Drive</span>
+            </div>
+      
+ 
+            <div class="flex items-center space-x-4 sm:flex-row flex-col sm:space-x-4 sm:space-y-0 space-y-2">
+              <span class="text-gray-300 inline block sm:mr-4">
+                Welcome, <span id="username"></span>!
+              </span>
+              <button
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                onclick="logoutUser()"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+    <main class="py-10">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+       
+
+        <div class="bg-white rounded-xl shadow-lg p-8">
+          <h1 class="text-2xl font-bold text-center text-gray-900 mb-6">
+            Upload Your Files
+          </h1>
+
+    
+          <form action="">
+            <div
+              class="border-2 border-dashed border-blue-300 rounded-xl p-4 sm:p-10 bg-blue-50 text-center transition-all duration-200 ease-in-out hover:border-blue-400"
+            >
+              <input type="file" id="fileInput" class="hidden" multiple />
+
+              <svg
+                class="mx-auto h-16 w-16 text-blue-500 mb-4"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M12 5V19M12 5L7 10M12 5L17 10"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M4 15V17C4 18.6569 5.34315 20 7 20H17C18.6569 20 20 18.6569 20 17V15"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+
+              <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                Drag & Drop Files Here
+              </h3>
+              <p class="text-gray-600 mb-4">or</p>
+              <button
+                onclick="document.getElementById('fileInput').click()"
+                class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+              >
+                Browse Files
+              </button>
+              <p class="text-sm text-gray-500 mt-4">Maximum file size: 2GB</p>
+            </div>
+          </form>
+
+
+          <div class="mt-8">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+              Recent Uploads
+            </h3>
+            <div class="space-y-4">
+ 
+              <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-medium text-gray-700">document.pdf</span>
+                  <span class="text-sm text-gray-500">2.5 MB</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    class="bg-green-500 h-2 rounded-full upload-progress"
+                    style="width: 100%"
+                  ></div>
+                </div>
+                <span class="text-sm text-green-500 mt-1 inline-block">
+                  Completed
+                </span>
+              </div>
+
+              <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-medium text-gray-700">image.jpg</span>
+                  <span class="text-sm text-gray-500">1.8 MB</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    class="bg-blue-500 h-2 rounded-full upload-progress uploading"
+                    style="width: 60%"
+                  ></div>
+                </div>
+                <span class="text-sm text-blue-500 mt-1 inline-block">
+                  Uploading...
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-blue-50 rounded-lg p-4">
+              <svg
+                class="h-8 w-8 text-blue-500 mb-2"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M13 10V3L4 14H11V21L20 10H13Z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <h4 class="font-semibold text-gray-800 mb-1">Fast Upload</h4>
+              <p class="text-sm text-gray-600">
+                Optimized for quick file transfers
+              </p>
+            </div>
+            <div class="bg-blue-50 rounded-lg p-4">
+              <svg
+                class="h-8 w-8 text-blue-500 mb-2"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M12 15V3M12 15L8 11M12 15L16 11"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M2 17L2.621 19.485C2.72915 19.9177 2.97882 20.3018 3.33033 20.5763C3.68184 20.8508 4.11501 20.9999 4.561 21H19.439C19.885 20.9999 20.3182 20.8508 20.6697 20.5763C21.0212 20.3018 21.2708 19.9177 21.379 19.485L22 17"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <h4 class="font-semibold text-gray-800 mb-1">
+                Secure Encryption
+              </h4>
+              <p class="text-sm text-gray-600">
+                AES-256 encryption for your files
+              </p>
+            </div>
+            <div class="bg-blue-50 rounded-lg p-4">
+              <svg
+                class="h-8 w-8 text-blue-500 mb-2"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M7 12L12 7L17 12"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M12 7V21"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <h4 class="font-semibold text-gray-800 mb-1">
+                Large File Support
+              </h4>
+              <p class="text-sm text-gray-600">
+                Upload files up to 10GB with ease
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+        const logoutUser = async()=>{
+           try {
+             const response = await fetch('/user/logout',
+             {
+                 method:'POST',
+                 credentials:'include'
+             });
+             if(response.ok){
+                 const data = await response.json();
+                 window.location.href = data.redirectUrl ;
+             }
+             else{
+                 alert("Logout failed!!!");
+             }
+           } catch (error) {
+            console.error('Logout error:', error);
+            alert('An error occurred while logging out.');
+           }
+        }
+      document.addEventListener("DOMContentLoaded", () => {
+        const username = localStorage.getItem("username");
+        if (username)
+          document.getElementById("username").textContent = username;
+      });
+    </script>
+  </body>
+</html>
