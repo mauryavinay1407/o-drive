@@ -11,16 +11,11 @@ const signInUserGET = (req, res) => {
   res.render("login");
 };
 
-const homepage = (req, res) => {
-  res.render("home");
-};
-
 const signUpUserPOST = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
     const obj = req.body;
-    console.log(obj);
     const result = signUpFormat.safeParse(obj);
     if (!result.success) {
       const errors = result.error.issues.map((issue) => ({
@@ -58,7 +53,7 @@ const signUpUserPOST = async (req, res) => {
     res.status(200).cookie("token", token, options);
 
     res.status(201).json({
-      redirectUrl: "/user/home",
+      redirectUrl: "/home",
       msg: "Successfully registered",
       username: savedUser.username,
     });
@@ -87,7 +82,6 @@ const signInUserPOST = async (req, res) => {
       });
     }
 
-    console.log(req.body);
     if (!email || !password)
       return res.status(401).json({
         message: "Invalid data",
@@ -115,7 +109,7 @@ const signInUserPOST = async (req, res) => {
     res.status(200).cookie("token", token, options);
 
     res.status(201).json({
-      redirectUrl: "/user/home",
+      redirectUrl: "/home",
       msg: "Successfully logged in",
       username: user.username,
     });
@@ -143,6 +137,5 @@ module.exports = {
   signInUserGET,
   signUpUserPOST,
   signInUserPOST,
-  homepage,
   logoutUser,
 };

@@ -14,9 +14,9 @@ const authMiddleware = async(req,res,next)=>{
         const user=await User.findById(decodedToken.id);
         if(!user)
         return res.status(403).json({
-            message:"Unauthorize access!"
+            message:"Unauthorized access!"
         });
-        
+        req.userId=decodedToken.userId;
         next();
 
     } catch (error) {

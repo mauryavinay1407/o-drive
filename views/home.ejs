@@ -69,7 +69,10 @@
           </h1>
 
     
-          <form action="">
+          <form action="/upload-files"
+          method="post"
+          enctype="multipart/form-data"
+          >
             <div
               class="border-2 border-dashed border-blue-300 rounded-xl p-4 sm:p-10 bg-blue-50 text-center transition-all duration-200 ease-in-out hover:border-blue-400"
             >
@@ -110,26 +113,8 @@
 
 
           <div class="mt-8">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">
-              Recent Uploads
-            </h3>
             <div class="space-y-4">
  
-              <div class="bg-gray-50 rounded-lg p-4">
-                <div class="flex items-center justify-between mb-2">
-                  <span class="font-medium text-gray-700">document.pdf</span>
-                  <span class="text-sm text-gray-500">2.5 MB</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    class="bg-green-500 h-2 rounded-full upload-progress"
-                    style="width: 100%"
-                  ></div>
-                </div>
-                <span class="text-sm text-green-500 mt-1 inline-block">
-                  Completed
-                </span>
-              </div>
 
               <div class="bg-gray-50 rounded-lg p-4">
                 <div class="flex items-center justify-between mb-2">
